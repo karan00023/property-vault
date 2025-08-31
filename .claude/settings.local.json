@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(open:*)",
+      "WebFetch(domain:www.newportrentals.com)",
+      "WebFetch(domain:www.journaljc.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

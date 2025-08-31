@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - PropertyVault Pro</title>
+    <link rel="stylesheet" href="table-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <h1><i class="fas fa-cog"></i> Admin Panel - PropertyVault Pro</h1>
+                <span class="subtitle">Configuration & Management Dashboard</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="table-view.html" class="nav-link">
+                    <i class="fas fa-arrow-left"></i> Back to Table View
+                </a>
+                <a href="index.html" class="nav-link">Card View</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="controls-section">
+            <div class="container">
+                <div class="admin-grid">
+                    <!-- Property Management -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3><i class="fas fa-home"></i> Property Management</h3>
+                            <p>Manage individual listings and property data</p>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="admin-actions">
+                                <button id="bulk-import-btn" class="btn-primary">
+                                    <i class="fas fa-upload"></i> Bulk Import Properties
+                                </button>
+                                <button id="export-all-btn" class="btn-secondary">
+                                    <i class="fas fa-download"></i> Export All Data
+                                </button>
+                                <button id="clean-data-btn" class="btn-danger">
+                                    <i class="fas fa-broom"></i> Clean Duplicate Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Site Configuration -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3><i class="fas fa-globe"></i> Site Configuration</h3>
+                            <p>Configure extraction sources and settings</p>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="config-section">
+                                <label>Default Extraction Sources:</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" id="enable-journal" checked>
+                                        <span class="checkmark"></span>
+                                        Journal Squared
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" id="enable-newport" checked>
+                                        <span class="checkmark"></span>
+                                        Newport Rentals
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" id="enable-portside" checked>
+                                        <span class="checkmark"></span>
+                                        Portside Towers
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" id="enable-equity" checked>
+                                        <span class="checkmark"></span>
+                                        Equity Apartments
+                                    </label>
+                                </div>
+                            </div>
+                            <button id="save-config-btn" class="btn-primary">
+                                <i class="fas fa-save"></i> Save Configuration
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Display Settings -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3><i class="fas fa-paint-brush"></i> Display Settings</h3>
+                            <p>Customize layout and appearance</p>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="config-section">
+                                <label>Properties per page:</label>
+                                <select id="per-page-select">
+                                    <option value="25">25</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                </select>
+                            </div>
+                            <div class="config-section">
+                                <label>Default sort column:</label>
+                                <select id="sort-column-select">
+                                    <option value="rent">Rent</option>
+                                    <option value="bedrooms">Bedrooms</option>
+                                    <option value="sqft">Square Footage</option>
+                                    <option value="availableDate">Available Date</option>
+                                    <option value="rating">Rating</option>
+                                </select>
+                            </div>
+                            <div class="config-section">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="enable-animations" checked>
+                                    <span class="checkmark"></span>
+                                    Enable Animations
+                                </label>
+                            </div>
+                            <button id="save-display-btn" class="btn-primary">
+                                <i class="fas fa-save"></i> Save Display Settings
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Data Analytics -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3><i class="fas fa-chart-bar"></i> Data Analytics</h3>
+                            <p>View statistics and insights</p>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="analytics-grid">
+                                <div class="analytics-item">
+                                    <span class="analytics-number" id="total-properties">0</span>
+                                    <span class="analytics-label">Total Properties</span>
+                                </div>
+                                <div class="analytics-item">
+                                    <span class="analytics-number" id="last-updated">--</span>
+                                    <span class="analytics-label">Last Updated</span>
+                                </div>
+                                <div class="analytics-item">
+                                    <span class="analytics-number" id="avg-rent">$0</span>
+                                    <span class="analytics-label">Average Rent</span>
+                                </div>
+                                <div class="analytics-item">
+                                    <span class="analytics-number" id="data-sources">4</span>
+                                    <span class="analytics-label">Active Sources</span>
+                                </div>
+                            </div>
+                            <button id="refresh-analytics-btn" class="btn-secondary">
+                                <i class="fas fa-sync"></i> Refresh Analytics
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Custom URL Management -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3><i class="fas fa-link"></i> Custom URL Management</h3>
+                            <p>Manage property URLs and extraction patterns</p>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="url-management">
+                                <label>Add Custom Property URL:</label>
+                                <div class="url-input-group">
+                                    <input type="url" id="custom-url-input" placeholder="https://example.com/property">
+                                    <button id="add-custom-url-btn" class="btn-primary">
+                                        <i class="fas fa-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="url-list">
+                                <h4>Saved Custom URLs:</h4>
+                                <div id="custom-urls-list" class="urls-container">
+                                    <!-- Custom URLs will be listed here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Maintenance -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3><i class="fas fa-tools"></i> System Maintenance</h3>
+                            <p>Database and system maintenance tools</p>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="maintenance-actions">
+                                <button id="clear-cache-btn" class="btn-secondary">
+                                    <i class="fas fa-trash"></i> Clear Cache
+                                </button>
+                                <button id="rebuild-index-btn" class="btn-secondary">
+                                    <i class="fas fa-retweet"></i> Rebuild Search Index
+                                </button>
+                                <button id="backup-data-btn" class="btn-primary">
+                                    <i class="fas fa-database"></i> Backup Data
+                                </button>
+                                <button id="reset-all-btn" class="btn-danger">
+                                    <i class="fas fa-exclamation-triangle"></i> Reset All Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status Messages -->
+        <div id="admin-messages" class="admin-messages" style="display: none;">
+            <div class="container">
+                <div class="message-content">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="message-text">Operation completed successfully</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><i class="fas fa-cog"></i> Admin Panel</h4>
+                    <p>Manage your luxury rental aggregation system</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Actions</h4>
+                    <ul>
+                        <li><a href="table-view.html">View Table</a></li>
+                        <li><a href="index.html">View Cards</a></li>
+                        <li><a href="#" id="quick-backup">Quick Backup</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Luxury Rentals Stop&Shop Admin Panel</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>

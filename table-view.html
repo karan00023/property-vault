@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropertyVault Pro - Premium Rental Aggregator</title>
+    <link rel="stylesheet" href="table-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <h1><i class="fas fa-vault"></i> PropertyVault Pro</h1>
+                <span class="subtitle">Premium Rental Aggregation & Analytics Platform</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active">Table View</a>
+                <a href="index.html" class="nav-link">Card View</a>
+                <a href="admin.html" class="nav-link">Admin</a>
+                <a href="#recommendations" class="nav-link">Recommendations</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="controls-section">
+            <div class="container">
+                <div class="controls-header">
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-listings">0</span>
+                            <span class="stat-label">Total Listings</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="studio-avg">$0</span>
+                            <span class="stat-label">Avg Studio</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="one-br-avg">$0</span>
+                            <span class="stat-label">Avg 1BR</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="two-br-avg">$0</span>
+                            <span class="stat-label">Avg 2BR</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="three-br-avg">$0</span>
+                            <span class="stat-label">Avg 3BR</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="available-now">0</span>
+                            <span class="stat-label">Available Now</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="add-links-btn" class="btn-primary">
+                            <i class="fas fa-plus"></i> Add Property Links
+                        </button>
+                        <button id="export-table-btn" class="btn-secondary">
+                            <i class="fas fa-download"></i> Export CSV
+                        </button>
+                        <button id="clear-all-btn" class="btn-danger">
+                            <i class="fas fa-trash"></i> Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters-section">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Search</label>
+                            <div class="search-input">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="search-filter" placeholder="Building name, location...">
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Bedrooms</label>
+                            <select id="bedrooms-filter">
+                                <option value="">All</option>
+                                <option value="studio">Studio</option>
+                                <option value="1">1 BR</option>
+                                <option value="2">2 BR</option>
+                                <option value="3">3 BR</option>
+                                <option value="4+">4+ BR</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Rent Range</label>
+                            <div class="rent-range">
+                                <input type="number" id="rent-min" placeholder="Min" min="0">
+                                <span>to</span>
+                                <input type="number" id="rent-max" placeholder="Max" min="0">
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Sq Ft Range</label>
+                            <div class="sqft-range">
+                                <input type="number" id="sqft-min" placeholder="Min" min="0">
+                                <span>to</span>
+                                <input type="number" id="sqft-max" placeholder="Max" min="0">
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Availability</label>
+                            <select id="availability-filter">
+                                <option value="">All</option>
+                                <option value="available">Available Now</option>
+                                <option value="coming-soon">Coming Soon</option>
+                                <option value="waitlist">Waitlist</option>
+                            </select>
+                        </div>
+                        
+                        <button id="clear-filters-btn" class="btn-clear">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <div class="container">
+                <div class="table-container">
+                    <div id="loading-table" class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading property listings...</p>
+                    </div>
+                    
+                    <table id="properties-table" class="properties-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-column="buildingName">
+                                    Building Name
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="bedrooms">
+                                    Bedrooms
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="bathrooms">
+                                    Bathrooms
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="sqft">
+                                    Sq Ft
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="rent">
+                                    Rent
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="availableDate">
+                                    Available Date
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable" data-column="rating">
+                                    Rating
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="properties-tbody">
+                            <!-- Property rows will be inserted here -->
+                        </tbody>
+                    </table>
+                    
+                    <div id="no-results" class="no-results" style="display: none;">
+                        <i class="fas fa-search"></i>
+                        <h3>No properties found</h3>
+                        <p>Try adjusting your filters or add more property links</p>
+                    </div>
+                </div>
+                
+                <div class="pagination" id="pagination" style="display: none;">
+                    <button id="prev-page" class="page-btn">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <div class="page-numbers" id="page-numbers">
+                        <!-- Page numbers will be inserted here -->
+                    </div>
+                    <button id="next-page" class="page-btn">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="recommendations" class="recommendations-section">
+            <div class="container">
+                <h2><i class="fas fa-star"></i> Recommended Properties</h2>
+                <div class="recommendation-tabs">
+                    <button class="rec-tab active" data-tab="best-value">Best Value</button>
+                    <button class="rec-tab" data-tab="highest-rated">Highest Rated</button>
+                    <button class="rec-tab" data-tab="newest">Newest Listings</button>
+                </div>
+                <div id="recommendations-content" class="recommendations-content">
+                    <!-- Recommendations will be populated here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Links Modal -->
+    <div id="add-links-modal" class="modal" style="display: none;">
+        <div class="modal-content large-modal">
+            <span class="close" data-modal="add-links-modal">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-link"></i> Add Property Links</h2>
+                <p>Paste multiple URLs from luxury rental sites (one per line)</p>
+            </div>
+            <div class="modal-body">
+                <div class="links-input-section">
+                    <label for="property-urls">Property URLs (one per line):</label>
+                    <textarea id="property-urls" placeholder="https://www.newportrentals.com/apartments/...&#10;https://www.journaljc.com/availability/...&#10;https://www.equityapartments.com/..."></textarea>
+                </div>
+                
+                <div class="processing-options">
+                    <div class="option-group">
+                        <label>
+                            <input type="checkbox" id="extract-reviews" checked>
+                            Extract reviews and ratings
+                        </label>
+                    </div>
+                    <div class="option-group">
+                        <label>
+                            <input type="checkbox" id="get-amenities" checked>
+                            Get detailed amenities
+                        </label>
+                    </div>
+                    <div class="option-group">
+                        <label>
+                            <input type="checkbox" id="check-availability" checked>
+                            Check real-time availability
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="extraction-progress" class="extraction-progress" style="display: none;">
+                    <div class="progress-header">
+                        <h3>Processing Properties...</h3>
+                        <div class="progress-stats">
+                            <span id="progress-text">0 of 0 processed</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <div id="extraction-log" class="extraction-log">
+                        <!-- Processing log will appear here -->
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="process-links-btn" class="btn-primary">
+                        <i class="fas fa-magic"></i> Process Links
+                    </button>
+                    <button class="btn-secondary" data-close-modal="add-links-modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Property Detail Modal -->
+    <div id="property-detail-modal" class="modal" style="display: none;">
+        <div class="modal-content large-modal">
+            <span class="close" data-modal="property-detail-modal">&times;</span>
+            <div id="property-detail-content">
+                <!-- Property details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><i class="fas fa-home"></i> Luxury Rentals Stop&Shop</h4>
+                    <p>Your one-stop shop for premium rental listings with advanced analysis tools</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul>
+                        <li>Multi-site data extraction</li>
+                        <li>Advanced filtering & sorting</li>
+                        <li>Review-based recommendations</li>
+                        <li>Real-time availability</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Supported Sites</h4>
+                    <ul>
+                        <li>Newport Rentals</li>
+                        <li>Journal Squared</li>
+                        <li>Equity Apartments</li>
+                        <li>Avalon Communities</li>
+                        <li>And many more...</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Luxury Rentals Stop&Shop. Last updated: <span id="last-updated">Loading...</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="table-script.js"></script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropertyVault Pro - Jersey City & NYC Premium Rentals</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <h1><i class="fas fa-vault"></i> PropertyVault Pro</h1>
+                <span class="subtitle">Jersey City & NYC Premium Apartments</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="table-view.html" class="nav-link">Table View</a>
+                <a href="admin.html" class="nav-link">Admin</a>
+                <a href="#properties" class="nav-link">Properties</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Find Your Perfect Luxury Rental</h2>
+                    <p>Aggregated listings from Newport Rentals, Journal Squared, Portside Towers & More</p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number" id="total-properties">0</span>
+                            <span class="stat-label">Available Units</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">4</span>
+                            <span class="stat-label">Premium Buildings</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">2</span>
+                            <span class="stat-label">Cities</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="filters" class="filters">
+            <div class="container">
+                <div class="filter-bar">
+                    <div class="search-section">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-input" placeholder="Search by building name, location...">
+                        </div>
+                        <div class="add-property-section">
+                            <button id="add-property-btn" class="btn-add-property">
+                                <i class="fas fa-plus"></i> Add Property Link
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label>Bedrooms</label>
+                            <select id="bedrooms-filter">
+                                <option value="">All</option>
+                                <option value="studio">Studio</option>
+                                <option value="1">1 Bedroom</option>
+                                <option value="2">2 Bedrooms</option>
+                                <option value="3">3+ Bedrooms</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Price Range</label>
+                            <select id="price-range">
+                                <option value="">All Prices</option>
+                                <option value="0-3000">Under $3,000</option>
+                                <option value="3000-5000">$3,000 - $5,000</option>
+                                <option value="5000-7000">$5,000 - $7,000</option>
+                                <option value="7000+">$7,000+</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Building</label>
+                            <select id="building-filter">
+                                <option value="">All Buildings</option>
+                                <option value="newport">Newport Rentals</option>
+                                <option value="journal">Journal Squared</option>
+                                <option value="portside">Portside Towers</option>
+                                <option value="equity">Equity Apartments</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Availability</label>
+                            <select id="availability-filter">
+                                <option value="">All Units</option>
+                                <option value="available">Available Now</option>
+                                <option value="coming-soon">Coming Soon</option>
+                            </select>
+                        </div>
+                        
+                        <button id="clear-filters" class="btn-clear">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="properties" class="properties">
+            <div class="container">
+                <div class="section-header">
+                    <div class="results-info">
+                        <h2 id="results-title">Available Luxury Units</h2>
+                        <p id="results-count">Loading properties...</p>
+                    </div>
+                    <div class="view-controls">
+                        <button id="grid-view" class="view-btn active" title="Grid View">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button id="list-view" class="view-btn" title="List View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button id="export-btn" class="btn-export" title="Export Results">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading luxury properties from multiple sources...</p>
+                </div>
+
+                <div id="properties-container" class="properties-grid">
+                    <!-- Properties will be dynamically loaded here -->
+                </div>
+
+                <div id="no-results" class="no-results" style="display: none;">
+                    <i class="fas fa-home"></i>
+                    <h3>No properties match your criteria</h3>
+                    <p>Try adjusting your filters or search terms</p>
+                    <button id="reset-search" class="btn-primary">Reset Search</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="building-info" class="building-info">
+            <div class="container">
+                <h2>Featured Buildings</h2>
+                <div class="buildings-grid">
+                    <div class="building-card" data-building="newport">
+                        <div class="building-image">
+                            <i class="fas fa-water"></i>
+                        </div>
+                        <div class="building-details">
+                            <h3>Newport Rentals</h3>
+                            <p class="address">121 Town Square Place, Jersey City</p>
+                            <p class="description">Waterfront luxury with Hudson River views</p>
+                            <div class="building-features">
+                                <span><i class="fas fa-swimming-pool"></i> Pool & Fitness</span>
+                                <span><i class="fas fa-dog"></i> Pet Friendly</span>
+                                <span><i class="fas fa-concierge-bell"></i> Doorman</span>
+                            </div>
+                            <div class="contact-info">
+                                <span><i class="fas fa-phone"></i> 877-408-2349</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="building-card" data-building="journal">
+                        <div class="building-image">
+                            <i class="fas fa-city"></i>
+                        </div>
+                        <div class="building-details">
+                            <h3>Journal Squared</h3>
+                            <p class="address">36 Journal Square Plaza, Jersey City</p>
+                            <p class="description">Modern high-rise in Journal Square</p>
+                            <div class="building-features">
+                                <span><i class="fas fa-train"></i> Transit Hub</span>
+                                <span><i class="fas fa-dumbbell"></i> Fitness Center</span>
+                                <span><i class="fas fa-wifi"></i> High-Speed WiFi</span>
+                            </div>
+                            <div class="contact-info">
+                                <span><i class="fas fa-phone"></i> 551-209-2121</span>
+                                <span><i class="fas fa-envelope"></i> info@JournalJC.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><i class="fas fa-building"></i> Luxury Rentals Hub</h4>
+                    <p>Your one-stop destination for premium Jersey City and NYC rental listings</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Data Sources</h4>
+                    <ul>
+                        <li>Newport Rentals</li>
+                        <li>Journal Squared</li>
+                        <li>Portside Towers</li>
+                        <li>Equity Apartments</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul>
+                        <li>Real-time availability</li>
+                        <li>Price comparisons</li>
+                        <li>Virtual tours</li>
+                        <li>Direct booking links</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Data aggregated from public sources</p>
+                    <p>Last updated: <span id="last-updated">Loading...</span></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Luxury Rentals Hub. Property data sourced from respective building websites.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add Property Modal -->
+    <div id="add-property-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" data-modal="add-property-modal">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Add Property Link</h2>
+                <p>Paste a link from Newport Rentals, Journal Squared, or other rental sites</p>
+            </div>
+            <div class="modal-body">
+                <div class="link-input-section">
+                    <label for="property-url">Property URL</label>
+                    <div class="url-input-group">
+                        <input type="url" id="property-url" placeholder="https://www.newportrentals.com/apartments/..." required>
+                        <button id="extract-btn" class="btn-extract">
+                            <i class="fas fa-magic"></i> Extract Info
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="extraction-status" class="extraction-status" style="display: none;">
+                    <div class="status-content">
+                        <div class="spinner-small"></div>
+                        <span class="status-text">Extracting property information...</span>
+                    </div>
+                </div>
+                
+                <div id="extracted-property" class="extracted-property" style="display: none;">
+                    <h3>Extracted Property Information</h3>
+                    <div class="property-preview">
+                        <!-- Extracted data will be shown here -->
+                    </div>
+                    <div class="modal-actions">
+                        <button id="save-property-btn" class="btn-primary">
+                            <i class="fas fa-save"></i> Add to Listings
+                        </button>
+                        <button class="btn-secondary" data-close-modal="add-property-modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Property Detail Modal -->
+    <div id="property-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" data-modal="property-modal">&times;</span>
+            <div id="modal-body">
+                <!-- Property details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
