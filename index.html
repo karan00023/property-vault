@@ -1,293 +1,516 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PropertyVault Pro - Jersey City & NYC Premium Rentals</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
-<body>
-    <header class="header">
-        <div class="container">
-            <div class="nav-brand">
-                <h1><i class="fas fa-vault"></i> PropertyVault Pro</h1>
-                <span class="subtitle">Jersey City & NYC Premium Apartments</span>
-            </div>
-            <nav class="nav-menu">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="table-view.html" class="nav-link">Table View</a>
-                <a href="admin.html" class="nav-link">Admin</a>
-                <a href="#properties" class="nav-link">Properties</a>
-            </nav>
-        </div>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="PropertyVault aggregates NYC and Downtown Jersey City high-rise rental buildings, leasing links, map search, and data-quality flags in one place."
+    />
+    <title>PropertyVault | NYC and Downtown JC Luxury Rental Inventory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18.3.1",
+          "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+          "htm": "https://esm.sh/htm@3.1.1"
+        }
+      }
+    </script>
+    <style>
+      :root {
+        --ink: #17202a;
+        --muted: #627184;
+        --line: #d9e1ea;
+        --paper: #fff;
+        --wash: #f4f7fa;
+        --panel: #eef4f8;
+        --teal: #107c83;
+        --teal-strong: #075f66;
+        --gold: #bd7a13;
+        --green: #207a4b;
+        --shadow: 0 18px 50px rgba(23, 32, 42, 0.11);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--wash);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      button, input, select, textarea { font: inherit; }
+      button, a { -webkit-tap-highlight-color: transparent; }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 14px 24px;
+        border-bottom: 1px solid rgba(217, 225, 234, 0.86);
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(18px);
+      }
+      .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+      .mark {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        background: var(--ink);
+        color: white;
+        font-weight: 900;
+      }
+      .eyebrow {
+        margin: 0 0 4px;
+        color: var(--teal-strong);
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { margin: 0; font-size: 1.05rem; line-height: 1.2; }
+      main { width: min(1560px, 100%); margin: 0 auto; padding: 22px; }
+      .actions, .detail-actions { display: flex; align-items: center; gap: 8px; }
+      .icon-button, .primary, .ghost {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+      }
+      .icon-button {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 40px;
+        background: white;
+        color: var(--ink);
+        font-weight: 900;
+      }
+      .icon-button:hover, .icon-button.active {
+        border-color: var(--teal);
+        background: #e7f6f5;
+        color: var(--teal-strong);
+      }
+      .primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 40px;
+        padding: 0 14px;
+        background: var(--teal);
+        color: white;
+        border-color: var(--teal);
+        font-weight: 800;
+        text-decoration: none;
+      }
+      .ghost {
+        min-height: 36px;
+        padding: 0 12px;
+        background: white;
+        color: var(--ink);
+        font-weight: 750;
+      }
+      .primary:hover, .property-card:hover, .ghost:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 28px rgba(16, 124, 131, 0.16);
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 460px);
+        gap: 18px;
+        min-height: 292px;
+        margin-bottom: 18px;
+      }
+      .hero-copy, .source-card, .filters, .results, .detail-card, .coverage {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+      .hero-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        overflow: hidden;
+        padding: 34px;
+        background:
+          linear-gradient(90deg, rgba(23, 32, 42, 0.88), rgba(23, 32, 42, 0.53)),
+          url("https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=1800&q=80") center/cover;
+        color: white;
+      }
+      .hero-copy .eyebrow { color: #91e4dc; }
+      .hero-copy h2 {
+        max-width: 920px;
+        margin-bottom: 16px;
+        font-size: clamp(2rem, 5vw, 4.6rem);
+        line-height: 1.02;
+      }
+      .hero-copy p:last-child {
+        max-width: 780px;
+        margin-bottom: 0;
+        color: rgba(255, 255, 255, 0.88);
+        line-height: 1.7;
+      }
+      .source-card { display: grid; gap: 12px; padding: 22px; }
+      .source-card > div { padding: 18px; border-radius: 8px; background: var(--panel); }
+      .metric { display: block; margin-bottom: 4px; font-size: 2rem; font-weight: 850; }
+      .label, .source-card p { color: var(--muted); }
+      .load-note {
+        margin: 0;
+        padding: 10px;
+        border-radius: 8px;
+        background: #fff0d9;
+        color: var(--gold) !important;
+        font-weight: 750;
+      }
+      .workbench {
+        display: grid;
+        grid-template-columns: 340px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+      .filters { position: sticky; top: 86px; padding: 18px; }
+      .heading, .detail-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+      .field { display: grid; gap: 7px; margin-bottom: 14px; }
+      .field span, .check span, .queue h3 {
+        color: #334155;
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+      .field input, .field select, .queue textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdff;
+        color: var(--ink);
+        outline: none;
+      }
+      .field input, .field select { height: 42px; padding: 0 12px; }
+      .field input:focus, .field select:focus, .queue textarea:focus {
+        border-color: var(--teal);
+        box-shadow: 0 0 0 4px rgba(16, 124, 131, 0.12);
+      }
+      .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .check { display: flex; align-items: center; gap: 9px; margin: 12px 0; }
+      .check input { width: 18px; height: 18px; accent-color: var(--teal); }
+      .queue { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+      .queue textarea { min-height: 96px; margin: 8px 0 10px; padding: 12px; resize: vertical; }
+      .results { min-width: 0; padding: 16px; }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(120px, 1fr));
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .stats div { padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: #fbfdff; }
+      .stats strong { display: block; margin-bottom: 3px; font-size: 1.35rem; }
+      .stats span { color: var(--muted); font-size: 0.78rem; font-weight: 750; }
+      .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+      .property-card {
+        min-height: 224px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: white;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+        animation: liftIn 360ms ease both;
+      }
+      .property-card.selected { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(16, 124, 131, 0.12); }
+      .pill, .status, .tags span, .amenities span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 0 8px;
+        border-radius: 6px;
+        background: #edf2f6;
+        color: #425466;
+        font-size: 0.75rem;
+        font-weight: 800;
+      }
+      .property-card h3 { min-height: 50px; margin: 14px 0 8px; font-size: 1.04rem; line-height: 1.25; }
+      .property-card p { min-height: 40px; margin-bottom: 12px; color: var(--muted); font-size: 0.88rem; }
+      .card-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+      .card-metrics span {
+        min-height: 38px;
+        padding: 8px;
+        border-radius: 8px;
+        background: var(--panel);
+        font-size: 0.78rem;
+        font-weight: 850;
+        text-align: center;
+      }
+      .tags, .amenities { display: flex; flex-wrap: wrap; gap: 6px; }
+      .good, .status.good { background: #e0f4e9; color: var(--green); }
+      .warn, .status.warn { background: #fff0d9; color: var(--gold); }
+      .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
+      table { width: 100%; min-width: 820px; border-collapse: collapse; background: white; }
+      th, td { padding: 14px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+      th { position: sticky; top: 0; background: #f8fbfd; color: #334155; font-size: 0.78rem; text-transform: uppercase; }
+      td span { display: block; margin-top: 3px; color: var(--muted); font-size: 0.78rem; }
+      tbody tr { cursor: pointer; transition: background 160ms ease; }
+      tbody tr:hover, .selected-row { background: #edf9f8; }
+      .map-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 14px; }
+      .map {
+        position: relative;
+        min-height: 640px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background:
+          linear-gradient(115deg, rgba(16, 124, 131, 0.08), rgba(255, 255, 255, 0.2)),
+          repeating-linear-gradient(0deg, transparent 0, transparent 47px, rgba(98, 113, 132, 0.12) 48px),
+          repeating-linear-gradient(90deg, transparent 0, transparent 47px, rgba(98, 113, 132, 0.12) 48px),
+          #f7fbfc;
+      }
+      .map::before {
+        content: "";
+        position: absolute;
+        inset: 10% 31% 7% 48%;
+        border-radius: 44% 38% 28% 42%;
+        border: 2px solid rgba(16, 124, 131, 0.18);
+        background: rgba(16, 124, 131, 0.06);
+        transform: rotate(-7deg);
+      }
+      .map-label {
+        position: absolute;
+        z-index: 1;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255,255,255,.82);
+        color: var(--muted);
+        font-size: .78rem;
+        font-weight: 850;
+      }
+      .map-label.manhattan { right: 26%; top: 18%; }
+      .map-label.jersey { left: 10%; bottom: 18%; }
+      .point {
+        position: absolute;
+        z-index: 2;
+        border: 2px solid white;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 3px 10px rgba(23,32,42,.22);
+        cursor: pointer;
+        transform: translate(-50%, -50%);
+        transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
+      }
+      .point.sourced { background: var(--green); }
+      .point.active, .point:hover {
+        z-index: 4;
+        background: var(--teal);
+        transform: translate(-50%, -50%) scale(1.55);
+        box-shadow: 0 0 0 6px rgba(16, 124, 131, 0.16);
+      }
+      .map-side { padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: #fbfdff; }
+      .mini { display: grid; gap: 8px; margin: 14px 0; }
+      .mini span { padding: 10px; border-radius: 8px; background: var(--panel); font-weight: 800; }
+      .detail-band { display: grid; grid-template-columns: minmax(0, 1fr) 410px; gap: 18px; margin-top: 18px; }
+      .detail-card, .coverage { padding: 22px; }
+      .rent { min-width: 190px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); text-align: right; }
+      .rent strong { display: block; font-size: 1.45rem; }
+      .rent span { color: var(--muted); font-size: .78rem; font-weight: 750; }
+      .detail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0; }
+      .detail-grid span { min-height: 64px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); font-size: .82rem; }
+      .detail-grid strong { display: block; color: var(--ink); font-size: 1rem; }
+      .empty-source { color: var(--gold); font-weight: 800; }
+      .region-list, .queue-list { display: grid; gap: 8px; }
+      .region-list { margin: 16px 0 22px; }
+      .region-list div, .queue-list div { display: flex; justify-content: space-between; gap: 12px; padding: 10px; border-radius: 8px; background: var(--panel); }
+      .queue-list div { display: grid; }
+      .queue-list span { overflow-wrap: anywhere; color: var(--muted); font-size: .78rem; }
+      @keyframes liftIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+      @media (max-width: 1180px) {
+        .hero, .workbench, .detail-band, .map-layout { grid-template-columns: 1fr; }
+        .filters { position: static; }
+      }
+      @media (max-width: 820px) {
+        .topbar, .heading, .detail-head { align-items: stretch; flex-direction: column; }
+        .actions { justify-content: space-between; }
+        main { padding: 12px; }
+        .hero-copy { min-height: 430px; padding: 22px; }
+        .stats, .detail-grid { grid-template-columns: repeat(2, 1fr); }
+        .two { grid-template-columns: 1fr; }
+        .rent { text-align: left; }
+      }
+      @media (max-width: 520px) {
+        .cards, .stats, .detail-grid { grid-template-columns: 1fr; }
+        .mark { width: 38px; height: 38px; }
+        .primary { width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import React, { useEffect, useMemo, useState } from "react";
+      import { createRoot } from "react-dom/client";
+      import htm from "htm";
 
-    <main>
-        <section id="hero" class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h2>Find Your Perfect Luxury Rental</h2>
-                    <p>Aggregated listings from Newport Rentals, Journal Squared, Portside Towers & More</p>
-                    <div class="hero-stats">
-                        <div class="stat">
-                            <span class="stat-number" id="total-properties">0</span>
-                            <span class="stat-label">Available Units</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">4</span>
-                            <span class="stat-label">Premium Buildings</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">2</span>
-                            <span class="stat-label">Cities</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+      const html = htm.bind(React.createElement);
+      const NYC = "https://data.cityofnewyork.us/resource/64uk-42ks.json";
+      const OVERPASS = "https://overpass-api.de/api/interpreter";
+      const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+      const num = new Intl.NumberFormat("en-US");
+      const bedroomOptions = [["studio", "Studio"], ["oneBed", "1 BR"], ["twoBed", "2 BR"]];
+      const emptySummary = { totalProperties: 0, withKnownLeasingSource: 0, flaggedForVerification: 0, byRegion: {}, caveat: "Public building inventory is loading. Live availability and asking rents are flagged where missing." };
+      const knownSources = [
+        { match: /journal/i, name: "Journal Squared", url: "https://www.journaljc.com/availability", amenities: ["PATH access", "Rooftop lounge", "Fitness center", "Doorman"] },
+        { match: /newport|town square/i, name: "Newport Rentals", url: "https://www.newportrentals.com/apartments-jersey-city-for-rent/", amenities: ["Waterfront", "PATH access", "Fitness center", "Pet friendly"] },
+        { match: /portside/i, name: "Portside Towers", url: "https://www.equityapartments.com/new-york-city/jersey-city/portside-towers-apartments", amenities: ["Waterfront", "Garage parking", "Concierge", "Fitness center"] },
+        { match: /sky/i, name: "Sky", url: "https://www.skynewyork.com/", amenities: ["Hudson River views", "Pool", "Fitness club", "Doorman"] },
+        { match: /mima/i, name: "MiMA", url: "https://www.mimarentals.com/", amenities: ["Doorman", "Fitness club", "Theater District", "Pet friendly"] },
+        { match: /eugene/i, name: "The Eugene", url: "https://www.theeugenenyc.com/", amenities: ["Hudson Yards", "Rooftop terrace", "Fitness center", "Doorman"] }
+      ];
+      const boxes = [
+        ["Hudson Yards", [-74.008, 40.748, -73.99, 40.762]], ["Midtown West", [-74.006, 40.76, -73.985, 40.774]],
+        ["Midtown East", [-73.985, 40.748, -73.958, 40.766]], ["Financial District", [-74.018, 40.7, -73.995, 40.714]],
+        ["Battery Park City", [-74.02, 40.705, -74.01, 40.718]], ["Upper West Side", [-73.99, 40.77, -73.958, 40.802]],
+        ["Upper East Side", [-73.965, 40.765, -73.935, 40.795]], ["Downtown Brooklyn", [-74, 40.686, -73.974, 40.7]],
+        ["Long Island City", [-73.965, 40.735, -73.93, 40.76]], ["Downtown Jersey City", [-74.055, 40.706, -74.025, 40.735]]
+      ];
+      const fallback = [
+        ["fallback-journal", "Journal Squared", "36 Journal Square Plaza", "Jersey City", "Downtown JC", "Journal Square", 40.7335, -74.0624, 68, 1840, "https://www.journaljc.com/availability"],
+        ["fallback-newport", "Newport Rentals", "121 Town Square Place", "Jersey City", "Downtown JC", "Downtown Jersey City", 40.7277, -74.0338, 35, 900, "https://www.newportrentals.com/apartments-jersey-city-for-rent/"],
+        ["fallback-57", "217 West 57th Street", "217 West 57th Street", "New York", "Manhattan", "Midtown West", 40.7663, -73.9809, 98, 179, ""]
+      ].map(([id, name, address, city, region, neighborhood, latitude, longitude, floors, units, leasingUrl]) => {
+        const rentBand = rents(region, floors, units, neighborhood);
+        return { id, name, address, city, region, neighborhood, latitude, longitude, floors, units, yearBuilt: null, owner: "", source: "Curated fallback", sourceUrl: leasingUrl || "https://data.cityofnewyork.us/Housing-Development/MapPLUTO/64uk-42ks", leasingUrl, rentBand, amenities: ["High-rise", "Elevator", "Residential"], tags: [region, neighborhood, "high-rise"], dataQuality: { buildingInventory: "curated fallback", liveRentFeed: leasingUrl ? "known leasing source" : "missing", needsVerification: ["live unit availability", "current asking rents"] } };
+      });
 
-        <section id="filters" class="filters">
-            <div class="container">
-                <div class="filter-bar">
-                    <div class="search-section">
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="search-input" placeholder="Search by building name, location...">
-                        </div>
-                        <div class="add-property-section">
-                            <button id="add-property-btn" class="btn-add-property">
-                                <i class="fas fa-plus"></i> Add Property Link
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-controls">
-                        <div class="filter-group">
-                            <label>Bedrooms</label>
-                            <select id="bedrooms-filter">
-                                <option value="">All</option>
-                                <option value="studio">Studio</option>
-                                <option value="1">1 Bedroom</option>
-                                <option value="2">2 Bedrooms</option>
-                                <option value="3">3+ Bedrooms</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label>Price Range</label>
-                            <select id="price-range">
-                                <option value="">All Prices</option>
-                                <option value="0-3000">Under $3,000</option>
-                                <option value="3000-5000">$3,000 - $5,000</option>
-                                <option value="5000-7000">$5,000 - $7,000</option>
-                                <option value="7000+">$7,000+</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label>Building</label>
-                            <select id="building-filter">
-                                <option value="">All Buildings</option>
-                                <option value="newport">Newport Rentals</option>
-                                <option value="journal">Journal Squared</option>
-                                <option value="portside">Portside Towers</option>
-                                <option value="equity">Equity Apartments</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label>Availability</label>
-                            <select id="availability-filter">
-                                <option value="">All Units</option>
-                                <option value="available">Available Now</option>
-                                <option value="coming-soon">Coming Soon</option>
-                            </select>
-                        </div>
-                        
-                        <button id="clear-filters" class="btn-clear">
-                            <i class="fas fa-times"></i> Clear
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="properties" class="properties">
-            <div class="container">
-                <div class="section-header">
-                    <div class="results-info">
-                        <h2 id="results-title">Available Luxury Units</h2>
-                        <p id="results-count">Loading properties...</p>
-                    </div>
-                    <div class="view-controls">
-                        <button id="grid-view" class="view-btn active" title="Grid View">
-                            <i class="fas fa-th-large"></i>
-                        </button>
-                        <button id="list-view" class="view-btn" title="List View">
-                            <i class="fas fa-list"></i>
-                        </button>
-                        <button id="export-btn" class="btn-export" title="Export Results">
-                            <i class="fas fa-download"></i> Export
-                        </button>
-                    </div>
-                </div>
-
-                <div id="loading" class="loading">
-                    <div class="spinner"></div>
-                    <p>Loading luxury properties from multiple sources...</p>
-                </div>
-
-                <div id="properties-container" class="properties-grid">
-                    <!-- Properties will be dynamically loaded here -->
-                </div>
-
-                <div id="no-results" class="no-results" style="display: none;">
-                    <i class="fas fa-home"></i>
-                    <h3>No properties match your criteria</h3>
-                    <p>Try adjusting your filters or search terms</p>
-                    <button id="reset-search" class="btn-primary">Reset Search</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="building-info" class="building-info">
-            <div class="container">
-                <h2>Featured Buildings</h2>
-                <div class="buildings-grid">
-                    <div class="building-card" data-building="newport">
-                        <div class="building-image">
-                            <i class="fas fa-water"></i>
-                        </div>
-                        <div class="building-details">
-                            <h3>Newport Rentals</h3>
-                            <p class="address">121 Town Square Place, Jersey City</p>
-                            <p class="description">Waterfront luxury with Hudson River views</p>
-                            <div class="building-features">
-                                <span><i class="fas fa-swimming-pool"></i> Pool & Fitness</span>
-                                <span><i class="fas fa-dog"></i> Pet Friendly</span>
-                                <span><i class="fas fa-concierge-bell"></i> Doorman</span>
-                            </div>
-                            <div class="contact-info">
-                                <span><i class="fas fa-phone"></i> 877-408-2349</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="building-card" data-building="journal">
-                        <div class="building-image">
-                            <i class="fas fa-city"></i>
-                        </div>
-                        <div class="building-details">
-                            <h3>Journal Squared</h3>
-                            <p class="address">36 Journal Square Plaza, Jersey City</p>
-                            <p class="description">Modern high-rise in Journal Square</p>
-                            <div class="building-features">
-                                <span><i class="fas fa-train"></i> Transit Hub</span>
-                                <span><i class="fas fa-dumbbell"></i> Fitness Center</span>
-                                <span><i class="fas fa-wifi"></i> High-Speed WiFi</span>
-                            </div>
-                            <div class="contact-info">
-                                <span><i class="fas fa-phone"></i> 551-209-2121</span>
-                                <span><i class="fas fa-envelope"></i> info@JournalJC.com</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4><i class="fas fa-building"></i> Luxury Rentals Hub</h4>
-                    <p>Your one-stop destination for premium Jersey City and NYC rental listings</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Data Sources</h4>
-                    <ul>
-                        <li>Newport Rentals</li>
-                        <li>Journal Squared</li>
-                        <li>Portside Towers</li>
-                        <li>Equity Apartments</li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Features</h4>
-                    <ul>
-                        <li>Real-time availability</li>
-                        <li>Price comparisons</li>
-                        <li>Virtual tours</li>
-                        <li>Direct booking links</li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <p>Data aggregated from public sources</p>
-                    <p>Last updated: <span id="last-updated">Loading...</span></p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Luxury Rentals Hub. Property data sourced from respective building websites.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Add Property Modal -->
-    <div id="add-property-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close" data-modal="add-property-modal">&times;</span>
-            <div class="modal-header">
-                <h2><i class="fas fa-plus-circle"></i> Add Property Link</h2>
-                <p>Paste a link from Newport Rentals, Journal Squared, or other rental sites</p>
-            </div>
-            <div class="modal-body">
-                <div class="link-input-section">
-                    <label for="property-url">Property URL</label>
-                    <div class="url-input-group">
-                        <input type="url" id="property-url" placeholder="https://www.newportrentals.com/apartments/..." required>
-                        <button id="extract-btn" class="btn-extract">
-                            <i class="fas fa-magic"></i> Extract Info
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="extraction-status" class="extraction-status" style="display: none;">
-                    <div class="status-content">
-                        <div class="spinner-small"></div>
-                        <span class="status-text">Extracting property information...</span>
-                    </div>
-                </div>
-                
-                <div id="extracted-property" class="extracted-property" style="display: none;">
-                    <h3>Extracted Property Information</h3>
-                    <div class="property-preview">
-                        <!-- Extracted data will be shown here -->
-                    </div>
-                    <div class="modal-actions">
-                        <button id="save-property-btn" class="btn-primary">
-                            <i class="fas fa-save"></i> Add to Listings
-                        </button>
-                        <button class="btn-secondary" data-close-modal="add-property-modal">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Property Detail Modal -->
-    <div id="property-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close" data-modal="property-modal">&times;</span>
-            <div id="modal-body">
-                <!-- Property details will be loaded here -->
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
+      const n = (v, f = 0) => Number.isFinite(Number(v)) ? Number(v) : f;
+      const title = (v) => String(v || "").toLowerCase().replace(/\b[a-z]/g, (m) => m.toUpperCase());
+      function hood(lon, lat, fallback) {
+        const hit = boxes.find(([, b]) => lon >= b[0] && lon <= b[2] && lat >= b[1] && lat <= b[3]);
+        return hit?.[0] || fallback;
+      }
+      function rents(region, floors, units, neighborhood) {
+        const premium = region === "Manhattan" || /Hudson|Financial|Battery|Midtown|Downtown Jersey/i.test(neighborhood);
+        const lift = Math.min(1800, Math.max(0, floors - 20) * 45) + Math.min(900, Math.max(0, (units || 150) - 200) * 1.35);
+        return { studio: Math.round(((premium ? 3600 : 2850) + lift) / 50) * 50, oneBed: Math.round(((premium ? 4700 : 3600) + lift) / 50) * 50, twoBed: Math.round(((premium ? 6900 : 5200) + lift) / 50) * 50 };
+      }
+      function source(record) {
+        const found = knownSources.find((s) => s.match.test(`${record.name} ${record.address} ${record.owner}`));
+        if (!found) return record;
+        return { ...record, name: found.name, leasingUrl: found.url, amenities: [...new Set([...found.amenities, ...record.amenities])], dataQuality: { ...record.dataQuality, liveRentFeed: "known leasing source", needsVerification: record.dataQuality.needsVerification.filter((x) => x !== "live unit availability") } };
+      }
+      function summarize(properties, generatedAt, prefix = "Building inventory is generated") {
+        const byRegion = properties.reduce((acc, p) => ((acc[p.region] = (acc[p.region] || 0) + 1), acc), {});
+        return { generatedAt, totalProperties: properties.length, withKnownLeasingSource: properties.filter((p) => p.leasingUrl).length, flaggedForVerification: properties.filter((p) => p.dataQuality.needsVerification.length).length, byRegion, caveat: `${prefix} from public parcel/map data. Live unit availability and asking rents require direct leasing feeds or owner permission and are flagged where missing.` };
+      }
+      async function loadData() {
+        const generatedAt = new Date().toISOString();
+        try {
+          const params = new URLSearchParams({ "$limit": "50000", "$select": "bbl,address,borough,ownername,latitude,longitude,numfloors,unitsres,yearbuilt,bldgclass", "$where": "numfloors >= 20 AND unitsres > 0 AND latitude IS NOT NULL AND longitude IS NOT NULL", "$order": "numfloors DESC, unitsres DESC" });
+          const nycRows = await (await fetch(`${NYC}?${params}`)).json();
+          const nyc = nycRows.map((row) => {
+            const lat = n(row.latitude), lon = n(row.longitude), floors = n(row.numfloors), units = n(row.unitsres);
+            const region = row.borough || "NYC", neighborhood = hood(lon, lat, region), address = title(row.address);
+            return source({ id: `nyc-${row.bbl}`, name: address || `${region} high-rise`, address, city: "New York", region, neighborhood, latitude: lat, longitude: lon, floors, units, yearBuilt: n(row.yearbuilt, null), owner: title(row.ownername), source: "NYC MapPLUTO", sourceUrl: "https://data.cityofnewyork.us/Housing-Development/MapPLUTO/64uk-42ks", leasingUrl: "", rentBand: rents(region, floors, units, neighborhood), amenities: ["High-rise", "Elevator", "Residential"], tags: [region, neighborhood, floors >= 40 ? "supertall rental candidate" : "high-rise"], dataQuality: { buildingInventory: "verified public parcel data", liveRentFeed: "missing", needsVerification: ["live unit availability", "current asking rents"] } });
+          });
+          const overpass = `[out:json][timeout:30];(way["building"]["building:levels"](40.706,-74.055,40.735,-74.025);relation["building"]["building:levels"](40.706,-74.055,40.735,-74.025););out center tags;`;
+          const jcRows = (await (await fetch(`${OVERPASS}?data=${encodeURIComponent(overpass)}`)).json()).elements || [];
+          const jc = jcRows.map((el) => ({ el, floors: n(el.tags?.["building:levels"]), lat: n(el.center?.lat ?? el.lat), lon: n(el.center?.lon ?? el.lon) })).filter((x) => x.floors >= 12 && x.lat && x.lon).map(({ el, floors, lat, lon }) => {
+            const name = el.tags?.name || [el.tags?.["addr:housenumber"], el.tags?.["addr:street"]].filter(Boolean).join(" ") || `Downtown JC high-rise ${el.id}`;
+            const address = [el.tags?.["addr:housenumber"], el.tags?.["addr:street"]].filter(Boolean).join(" ") || "Downtown Jersey City";
+            const units = n(el.tags?.["building:flats"], null), neighborhood = "Downtown Jersey City";
+            return source({ id: `jc-${el.type}-${el.id}`, name: title(name), address: title(address), city: "Jersey City", region: "Downtown JC", neighborhood, latitude: lat, longitude: lon, floors, units, yearBuilt: null, owner: "", source: "OpenStreetMap via Overpass", sourceUrl: "https://www.openstreetmap.org/", leasingUrl: "", rentBand: rents("Jersey City", floors, units || 150, neighborhood), amenities: ["High-rise", "Transit access", "Hudson waterfront area"], tags: ["Downtown JC", floors >= 40 ? "skyline tower" : "high-rise"], dataQuality: { buildingInventory: "open map building tag", liveRentFeed: "missing", needsVerification: ["live unit availability", "current asking rents", units ? "" : "residential unit count", "official parcel cross-check"].filter(Boolean) } });
+          });
+          const map = new Map([...nyc, ...jc].map((p) => [p.id, p]));
+          const properties = [...map.values()].sort((a, b) => (a.region === "Manhattan" ? -1 : b.region === "Manhattan" ? 1 : b.floors - a.floors || (b.units || 0) - (a.units || 0)));
+          return { properties, generatedAt, coverageSummary: summarize(properties, generatedAt), error: "" };
+        } catch (err) {
+          return { properties: fallback, generatedAt, coverageSummary: summarize(fallback, generatedAt, "Fallback inventory is shown"), error: err.message };
+        }
+      }
+      function csv(rows) {
+        const headers = ["name","address","city","region","neighborhood","floors","units","studio","oneBed","twoBed","leasingUrl","source","flags"];
+        const esc = (v) => `"${String(v ?? "").replaceAll('"', '""')}"`;
+        const data = [headers.join(","), ...rows.map((r) => headers.map((h) => esc(["studio","oneBed","twoBed"].includes(h) ? r.rentBand[h] : h === "flags" ? r.dataQuality.needsVerification.join("; ") : r[h])).join(","))].join("\n");
+        const url = URL.createObjectURL(new Blob([data], { type: "text/csv" }));
+        Object.assign(document.createElement("a"), { href: url, download: "property-vault-high-rise-inventory.csv" }).click();
+        URL.revokeObjectURL(url);
+      }
+      function App() {
+        const [data, setData] = useState({ properties: [], generatedAt: "", coverageSummary: emptySummary, error: "", loading: true });
+        const [query, setQuery] = useState(""), [region, setRegion] = useState("All"), [bedroom, setBedroom] = useState("studio"), [maxRent, setMaxRent] = useState("");
+        const [minFloors, setMinFloors] = useState(12), [onlyLeasing, setOnlyLeasing] = useState(false), [onlyFlagged, setOnlyFlagged] = useState(false);
+        const [view, setView] = useState("grid"), [selectedId, setSelectedId] = useState(""), [sourceInput, setSourceInput] = useState(""), [queue, setQueue] = useState([]);
+        useEffect(() => { let alive = true; loadData().then((result) => alive && setData({ ...result, loading: false })); return () => { alive = false; }; }, []);
+        useEffect(() => { if (data.properties.length && !selectedId) setSelectedId(data.properties[0].id); }, [data.properties, selectedId]);
+        const regions = useMemo(() => ["All", ...new Set(data.properties.map((p) => p.region))], [data.properties]);
+        const filtered = useMemo(() => {
+          const q = query.trim().toLowerCase(), max = Number(maxRent);
+          return data.properties.filter((p) => {
+            const haystack = [p.name, p.address, p.city, p.region, p.neighborhood, p.owner, p.tags.join(" ")].join(" ").toLowerCase();
+            return (!q || haystack.includes(q)) && (region === "All" || p.region === region) && p.floors >= Number(minFloors || 0) && (!maxRent || p.rentBand[bedroom] <= max) && (!onlyLeasing || p.leasingUrl) && (!onlyFlagged || p.dataQuality.needsVerification.length);
+          });
+        }, [data.properties, query, region, bedroom, maxRent, minFloors, onlyLeasing, onlyFlagged]);
+        const selected = filtered.find((p) => p.id === selectedId) || filtered[0];
+        const stats = useMemo(() => {
+          const rents = filtered.map((p) => p.rentBand[bedroom]).filter(Boolean);
+          return { avgRent: rents.length ? Math.round(rents.reduce((a, b) => a + b, 0) / rents.length) : 0, avgFloors: filtered.length ? Math.round(filtered.reduce((a, p) => a + p.floors, 0) / filtered.length) : 0, leasing: filtered.filter((p) => p.leasingUrl).length, flagged: filtered.filter((p) => p.dataQuality.needsVerification.length).length };
+        }, [filtered, bedroom]);
+        const addQueue = () => {
+          const urls = sourceInput.split(/\n|,/).map((u) => u.trim()).filter(Boolean);
+          if (!urls.length) return;
+          setQueue((old) => [...urls.map((url, i) => ({ id: `${Date.now()}-${i}`, url, status: /newportrentals|journaljc|equityapartments|avaloncommunities|relatedrentals|gotham/i.test(url) ? "Supported source, needs backend scraper" : "Unknown source, manual mapping needed" })), ...old]);
+          setSourceInput("");
+        };
+        return html`
+          <${React.Fragment}>
+            <header className="topbar">
+              <div className="brand"><div className="mark">PV</div><div><p className="eyebrow">PropertyVault</p><h1>NYC and Downtown JC luxury rental inventory</h1></div></div>
+              <nav className="actions">${["grid", "table", "map"].map((v) => html`<button className=${view === v ? "icon-button active" : "icon-button"} onClick=${() => setView(v)} aria-label=${`${v} view`}>${v === "grid" ? "G" : v === "table" ? "T" : "M"}</button>`)}<button className="primary" onClick=${() => csv(filtered)}>Export</button></nav>
+            </header>
+            <main>
+              <section className="hero"><div className="hero-copy"><p className="eyebrow">One searchable vault for the towers everyone hides separately</p><h2>High-rise rental buildings, leasing links, map search, and every missing-data flag.</h2><p>Built from NYC MapPLUTO and Downtown Jersey City open map data. Live asking rents are estimated until a direct leasing feed is connected, and every gap is surfaced.</p></div><div className="source-card"><div><span className="metric">${num.format(data.coverageSummary.totalProperties)}</span><span className="label">high-rise records</span></div><div><span className="metric">${num.format(data.coverageSummary.withKnownLeasingSource)}</span><span className="label">known leasing sources</span></div><div><span className="metric">${num.format(data.coverageSummary.flaggedForVerification)}</span><span className="label">flagged for follow-up</span></div><p>${data.loading ? "Loading latest public building inventory..." : `Generated ${new Date(data.generatedAt).toLocaleDateString()} from public building inventory.`}</p>${data.error && html`<p className="load-note">Live source fetch fell back to curated starter data: ${data.error}</p>`}</div></section>
+              <section className="workbench">
+                <aside className="filters"><div className="heading"><h2>Search</h2><button className="ghost" onClick=${() => { setQuery(""); setRegion("All"); setBedroom("studio"); setMaxRent(""); setMinFloors(12); setOnlyLeasing(false); setOnlyFlagged(false); }}>Reset</button></div><label className="field"><span>Building, neighborhood, owner</span><input value=${query} onInput=${(e) => setQuery(e.target.value)} placeholder="Hudson Yards, Newport, 8 Spruce..." /></label><label className="field"><span>Market</span><select value=${region} onChange=${(e) => setRegion(e.target.value)}>${regions.map((r) => html`<option value=${r}>${r}</option>`)}</select></label><div className="two"><label className="field"><span>Rent type</span><select value=${bedroom} onChange=${(e) => setBedroom(e.target.value)}>${bedroomOptions.map(([v, l]) => html`<option value=${v}>${l}</option>`)}</select></label><label className="field"><span>Max rent</span><input type="number" value=${maxRent} onInput=${(e) => setMaxRent(e.target.value)} placeholder="6500" /></label></div><label className="field"><span>Minimum floors: ${minFloors}</span><input type="range" min="12" max="85" value=${minFloors} onInput=${(e) => setMinFloors(e.target.value)} /></label><label className="check"><input type="checkbox" checked=${onlyLeasing} onChange=${(e) => setOnlyLeasing(e.target.checked)} /><span>Only records with known leasing links</span></label><label className="check"><input type="checkbox" checked=${onlyFlagged} onChange=${(e) => setOnlyFlagged(e.target.checked)} /><span>Only show records that need verification</span></label><div className="queue"><h3>Add source links to verify</h3><textarea value=${sourceInput} onInput=${(e) => setSourceInput(e.target.value)} placeholder="Paste building leasing pages here, one per line"></textarea><button className="primary" onClick=${addQueue}>Queue review</button></div></aside>
+                <section className="results"><${Stats} filtered=${filtered} stats=${stats} bedroom=${bedroom} />${view === "grid" && html`<${Grid} rows=${filtered} selectedId=${selected?.id} setSelectedId=${setSelectedId} bedroom=${bedroom} />`}${view === "table" && html`<${Table} rows=${filtered} selectedId=${selected?.id} setSelectedId=${setSelectedId} bedroom=${bedroom} />`}${view === "map" && html`<${MapView} rows=${filtered} selected=${selected} setSelectedId=${setSelectedId} bedroom=${bedroom} />`}</section>
+              </section>
+              <section className="detail-band"><${Detail} property=${selected} bedroom=${bedroom} /><${Coverage} summary=${data.coverageSummary} queue=${queue} /></section>
+            </main>
+          <//>`;
+      }
+      function Stats({ filtered, stats, bedroom }) {
+        return html`<div className="stats"><div><strong>${num.format(filtered.length)}</strong><span>matching properties</span></div><div><strong>${money.format(stats.avgRent)}</strong><span>avg ${bedroomOptions.find(([v]) => v === bedroom)?.[1]} estimate</span></div><div><strong>${stats.avgFloors}</strong><span>avg floors</span></div><div><strong>${stats.leasing}</strong><span>with leasing URL</span></div><div><strong>${stats.flagged}</strong><span>flagged records</span></div></div>`;
+      }
+      function Grid({ rows, selectedId, setSelectedId, bedroom }) {
+        return html`<div className="cards">${rows.slice(0, 120).map((p) => html`<button className=${p.id === selectedId ? "property-card selected" : "property-card"} onClick=${() => setSelectedId(p.id)}><span className="pill">${p.region}</span><h3>${p.name}</h3><p>${p.address || p.neighborhood}</p><div className="card-metrics"><span>${p.floors} floors</span><span>${p.units ? num.format(p.units) : "?"} units</span><span>${money.format(p.rentBand[bedroom])}</span></div><div className="tags">${p.leasingUrl ? html`<span className="good">Leasing link</span>` : html`<span className="warn">Needs rent feed</span>`}${p.dataQuality.needsVerification.slice(0, 2).map((f) => html`<span>${f}</span>`)}</div></button>`)}</div>`;
+      }
+      function Table({ rows, selectedId, setSelectedId, bedroom }) {
+        return html`<div className="table-wrap"><table><thead><tr><th>Building</th><th>Market</th><th>Floors</th><th>Units</th><th>${bedroomOptions.find(([v]) => v === bedroom)?.[1]}</th><th>Data status</th></tr></thead><tbody>${rows.slice(0, 500).map((p) => html`<tr className=${p.id === selectedId ? "selected-row" : ""} onClick=${() => setSelectedId(p.id)}><td><strong>${p.name}</strong><span>${p.address}</span></td><td>${p.region}</td><td>${p.floors}</td><td>${p.units ? num.format(p.units) : "Flagged"}</td><td>${money.format(p.rentBand[bedroom])}</td><td>${p.leasingUrl ? html`<span className="status good">leasing source</span>` : html`<span className="status warn">verify rent feed</span>`}</td></tr>`)}</tbody></table></div>`;
+      }
+      function MapView({ rows, selected, setSelectedId, bedroom }) {
+        const bounds = useMemo(() => {
+          const lats = rows.map((p) => p.latitude), lons = rows.map((p) => p.longitude);
+          return { minLat: Math.min(...lats), maxLat: Math.max(...lats), minLon: Math.min(...lons), maxLon: Math.max(...lons) };
+        }, [rows]);
+        const project = (p) => ({ x: ((p.longitude - bounds.minLon) / (bounds.maxLon - bounds.minLon || 1)) * 100, y: 100 - ((p.latitude - bounds.minLat) / (bounds.maxLat - bounds.minLat || 1)) * 100 });
+        return html`<div className="map-layout"><div className="map"><div className="map-label manhattan">Manhattan</div><div className="map-label jersey">Downtown JC</div>${rows.slice(0, 900).map((p) => { const point = project(p), size = Math.max(7, Math.min(18, p.floors / 3)); return html`<button className=${selected?.id === p.id ? "point active" : p.leasingUrl ? "point sourced" : "point"} style=${{ left: `${point.x}%`, top: `${point.y}%`, width: `${size}px`, height: `${size}px` }} title=${`${p.name} - ${p.floors} floors`} onClick=${() => setSelectedId(p.id)}></button>`; })}</div><div className="map-side"><h3>${selected?.name || "Select a property"}</h3>${selected && html`<p>${selected.address || selected.neighborhood}</p><div className="mini"><span>${selected.floors} floors</span><span>${selected.units ? num.format(selected.units) : "units flagged"}</span><span>${money.format(selected.rentBand[bedroom])}</span></div><p>${selected.source}</p>`}</div></div>`;
+      }
+      function Detail({ property, bedroom }) {
+        if (!property) return html`<article className="detail-card"><h2>Loading property inventory</h2><p>Pulling public high-rise records now.</p></article>`;
+        return html`<article className="detail-card"><div className="detail-head"><div><p className="eyebrow">${property.region} / ${property.neighborhood}</p><h2>${property.name}</h2><p>${property.address || property.city}</p></div><div className="rent"><strong>${money.format(property.rentBand[bedroom])}</strong><span>estimated ${bedroomOptions.find(([v]) => v === bedroom)?.[1]}</span></div></div><div className="detail-grid"><span><strong>${property.floors}</strong> floors</span><span><strong>${property.units ? num.format(property.units) : "Flagged"}</strong> units</span><span><strong>${property.yearBuilt || "Flagged"}</strong> year built</span><span><strong>${property.owner || "Flagged"}</strong> owner</span></div><div className="amenities">${property.amenities.map((a) => html`<span>${a}</span>`)}</div><div className="detail-actions">${property.leasingUrl ? html`<a className="primary" href=${property.leasingUrl} target="_blank" rel="noreferrer">Open leasing source</a>` : html`<span className="empty-source">No direct leasing source attached yet</span>`}<a className="ghost" href=${property.sourceUrl} target="_blank" rel="noreferrer">Public source</a></div></article>`;
+      }
+      function Coverage({ summary, queue }) {
+        return html`<aside className="coverage"><h2>Coverage Flags</h2><p>${summary.caveat}</p><div className="region-list">${Object.entries(summary.byRegion).sort((a, b) => b[1] - a[1]).map(([name, count]) => html`<div><span>${name}</span><strong>${num.format(count)}</strong></div>`)}</div><h3>Queued source checks</h3><div className="queue-list">${queue.length ? queue.slice(0, 6).map((item) => html`<div><strong>${item.status}</strong><span>${item.url}</span></div>`) : html`<p>No extra sources queued yet.</p>`}</div></aside>`;
+      }
+      createRoot(document.getElementById("root")).render(html`<${App} />`);
+    </script>
+  </body>
 </html>
