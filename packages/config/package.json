@@ -1,0 +1,1 @@
+{"name":"@propertyvault/config","version":"0.1.0","private":true,"exports":{"./env":"./src/env.ts"}}

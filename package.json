@@ -1,0 +1,20 @@
+{
+  "name": "propertyvault",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "npm run dev --workspace=@propertyvault/web",
+    "dev:worker": "npm run dev --workspace=@propertyvault/worker",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:coverage": "npm run test:coverage --workspaces --if-present",
+    "db:generate": "npm run generate --workspace=@propertyvault/db",
+    "db:migrate": "npm run migrate --workspace=@propertyvault/db",
+    "db:rollback": "npm run rollback --workspace=@propertyvault/db",
+    "db:validate": "npm run validate --workspace=@propertyvault/db"
+  },
+  "engines": { "node": ">=22" }
+}

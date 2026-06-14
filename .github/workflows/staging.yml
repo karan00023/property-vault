@@ -1,0 +1,20 @@
+name: Staging
+on:
+  workflow_dispatch:
+  push:
+    branches: [staging]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run test && npm run build
+      - name: Migration gate
+        run: npm run db:migrate
+        env: { DATABASE_URL: "${{ secrets.STAGING_DATABASE_URL }}" }
+      - name: Deploy handoff
+        run: echo "Connect this gated job to the client-owned Vercel/Fly deployment token."

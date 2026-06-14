@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: propertyvault
+      POSTGRES_USER: propertyvault
+      POSTGRES_PASSWORD: propertyvault
+    ports: ["5432:5432"]
+    volumes: ["propertyvault-db:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U propertyvault"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  mail:
+    image: axllent/mailpit:v1.20
+    ports: ["1025:1025", "8025:8025"]
+  web:
+    build: .
+    profiles: ["app"]
+    environment:
+      DATABASE_URL: postgres://propertyvault:propertyvault@db:5432/propertyvault
+      AUTH_SECRET: local-development-auth-secret-at-least-32-bytes
+      MFA_ENCRYPTION_KEY: local-development-mfa-secret-at-least-32-bytes
+      EMAIL_SERVER: smtp://mail:1025
+      EMAIL_FROM: operations@propertyvault.local
+    ports: ["3000:3000"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  propertyvault-db:
