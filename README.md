@@ -17,11 +17,18 @@ cp .env.example .env.local
 docker compose up -d db mail
 npm install
 npm run db:migrate
+npm run db:seed:official
 npm test
 npm run dev
 ```
 
-Mailpit is available at `http://localhost:8025`. The public catalog is empty until reviewed records satisfy the database publication gate; there is intentionally no static fallback.
+Mailpit is available at `http://localhost:8025`. The public catalog is loaded by the official seed pipeline only after each record has verified leasing links, source records, reviewed provenance, and sourcing tasks for missing assets; there is intentionally no static fallback.
+
+One-command local run, when Docker is available:
+
+```bash
+npm run local:run
+```
 
 ## Governing documents
 

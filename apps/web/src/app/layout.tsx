@@ -20,6 +20,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Link href="/" className="wordmark" aria-label="PropertyVault home"><span>Property</span>Vault</Link>
           <nav aria-label="Primary navigation">
             <Link href="/">Discover</Link>
+            <Link href="/markets">Markets</Link>
+            <Link href="/data-standard">Data standard</Link>
             <Link href="/submit">Submit a building</Link>
             <Link href="/admin">Operations</Link>
           </nav>

@@ -8,6 +8,7 @@
     "migrate": "tsx src/migrate.ts up",
     "rollback": "tsx src/migrate.ts down",
     "validate": "tsx src/validate.ts",
+    "seed:official": "tsx src/seed-official.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

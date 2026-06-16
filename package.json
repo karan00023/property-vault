@@ -14,7 +14,10 @@
     "db:generate": "npm run generate --workspace=@propertyvault/db",
     "db:migrate": "npm run migrate --workspace=@propertyvault/db",
     "db:rollback": "npm run rollback --workspace=@propertyvault/db",
-    "db:validate": "npm run validate --workspace=@propertyvault/db"
+    "db:validate": "npm run validate --workspace=@propertyvault/db",
+    "db:seed:official": "npm run seed:official --workspace=@propertyvault/db",
+    "local:up": "docker compose up -d db mail",
+    "local:run": "npm run local:up && npm run db:migrate && npm run db:seed:official && npm run dev"
   },
   "engines": { "node": ">=22" }
 }

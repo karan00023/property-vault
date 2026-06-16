@@ -1,11 +1,11 @@
 import { ArrowDown, CheckCircle2, ShieldCheck } from "lucide-react";
 import { SearchExperience } from "@/components/search-experience";
-import { listPublishedBuildings } from "@/lib/catalog";
+import { safeListPublishedBuildings } from "@/lib/catalog";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const buildings = await listPublishedBuildings();
+  const { buildings, databaseReady } = await safeListPublishedBuildings();
   return (
     <main>
       <section className="hero">
@@ -17,7 +17,7 @@ export default async function Home() {
         </div>
         <div className="hero-stamp"><span>PV</span><p>Verified<br />Collection</p></div>
       </section>
-      <SearchExperience buildings={buildings} />
+      <SearchExperience buildings={buildings} databaseReady={databaseReady} />
       <section className="editorial-band">
         <span className="section-kicker">The PropertyVault standard</span>
         <h2>Fewer listings.<br /><em>Better answers.</em></h2>
