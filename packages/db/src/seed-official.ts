@@ -179,7 +179,7 @@ async function seed() {
       const [building] = await db.insert(buildings).values({
         marketId: marketIds.get(record.market)!, neighborhoodId: neighborhoodIds.get(`${record.market}:${record.neighborhood}`)!,
         slug: record.slug, status: "draft", name: record.name, addressLine1: record.addressLine1, city: record.city, region: record.region,
-        postalCode: record.postalCode, geom: sql`ST_SetSRID(ST_MakePoint(${record.longitude}, ${record.latitude}), 4326)::geography`,
+        postalCode: record.postalCode, geom: sql`ST_SetSRID(ST_MakePoint(${record.longitude}, ${record.latitude}), 4326)::public.geography`,
         floors: record.floors, totalUnits: record.totalUnits, developer: record.developer, propertyManager: record.propertyManager,
         leasingPlatform: record.leasingPlatform, verifiedAt: fetchedAt
       }).onConflictDoUpdate({ target: buildings.slug, set: { updatedAt: fetchedAt, verifiedAt: fetchedAt } }).returning();

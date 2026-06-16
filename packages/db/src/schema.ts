@@ -4,10 +4,10 @@ import {
 } from "drizzle-orm/pg-core";
 
 const pointGeography = customType<{ data: string }>({
-  dataType() { return "geography(Point,4326)"; }
+  dataType() { return "public.geography(Point,4326)"; }
 });
 const polygonGeography = customType<{ data: string }>({
-  dataType() { return "geography(MultiPolygon,4326)"; }
+  dataType() { return "public.geography(MultiPolygon,4326)"; }
 });
 
 export const buildingStatus = pgEnum("building_status", ["draft", "staged", "published", "archived"]);

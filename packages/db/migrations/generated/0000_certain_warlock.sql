@@ -106,7 +106,7 @@ CREATE TABLE "buildings" (
 	"city" text NOT NULL,
 	"region" text NOT NULL,
 	"postal_code" text NOT NULL,
-	"geom" "geography(Point,4326)",
+	"geom" public.geography(Point,4326),
 	"bbl" text,
 	"bin" text,
 	"year_built" integer,
@@ -172,7 +172,7 @@ CREATE TABLE "markets" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"slug" text NOT NULL,
 	"name" text NOT NULL,
-	"boundary" "geography(MultiPolygon,4326)",
+	"boundary" public.geography(MultiPolygon,4326),
 	"active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "markets_slug_unique" UNIQUE("slug")
@@ -192,7 +192,7 @@ CREATE TABLE "neighborhoods" (
 	"market_id" uuid NOT NULL,
 	"slug" text NOT NULL,
 	"name" text NOT NULL,
-	"boundary" "geography(MultiPolygon,4326)",
+	"boundary" public.geography(MultiPolygon,4326),
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
