@@ -8,6 +8,8 @@
     "dev:worker": "npm run dev --workspace=@propertyvault/worker",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
+    "start": "node scripts/start-standalone.mjs",
+    "start:web": "npm run build --workspace=@propertyvault/web && node scripts/start-standalone.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:coverage": "npm run test:coverage --workspaces --if-present",
